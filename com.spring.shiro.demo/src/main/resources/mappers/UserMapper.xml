@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.shiro.demo.mapper.UserMapper">
+    <resultMap id="userMap" type="com.spring.shiro.demo.entity.UserBean">
+        <id column="Id" property="id" jdbcType="VARCHAR" />
+        <result column="User_Id" property="userId" jdbcType="VARCHAR" />
+        <result column="User_Name" property="userName" jdbcType="VARCHAR" />
+        <result column="User_Account" property="userAccount" jdbcType="VARCHAR" />
+        <result column="User_Password" property="userPassword" jdbcType="VARCHAR" />
+        <result column="User_Job" property="userJob" jdbcType="VARCHAR" />
+        <result column="User_Tel" property="userTel" jdbcType="VARCHAR" />
+        <result column="Org_Id" property="orgId" jdbcType="VARCHAR" />
+        <result column="CreateTime" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UpdateTime" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="Status" property="status" jdbcType="VARCHAR" />
+        <result column="IsDel" property="isDel" jdbcType="INTEGER" />
+        <collection property="roles" ofType="com.spring.shiro.demo.entity.RoleBean">
+            <id column="Id" property="id" jdbcType="VARCHAR" />
+            <result column="Role_Id" property="roleId" jdbcType="VARCHAR" />
+            <result column="Role_Name" property="roleName" jdbcType="VARCHAR" />
+            <result column="Role_Value" property="roleValue" jdbcType="VARCHAR" />
+            <result column="Role_Des" property="roleDes" jdbcType="VARCHAR" />
+            <result column="CreatePerson" property="createPerson" jdbcType="VARCHAR" />
+            <result column="CreateTime" property="createTime" jdbcType="TIMESTAMP" />
+            <result column="UpdateTime" property="updateTime" jdbcType="TIMESTAMP" />
+            <result column="SortCode" property="sortCode" jdbcType="VARCHAR" />
+            <result column="Status" property="status" jdbcType="VARCHAR" />
+            <result column="IsDel" property="isDel" jdbcType="INTEGER" />
+            <collection property="permissions" ofType="com.spring.shiro.demo.entity.PermissionBean">
+                <id column="Id" property="id" jdbcType="VARCHAR" />
+                <result column="M_Id" property="mId" jdbcType="VARCHAR" />
+                <result column="M_PId" property="mPid" jdbcType="VARCHAR" />
+                <result column="M_Name" property="mName" jdbcType="VARCHAR" />
+                <result column="M_Value" property="mValue" jdbcType="VARCHAR" />
+                <result column="M_Url" property="mUrl" jdbcType="VARCHAR" />
+                <result column="M_Icon" property="mIcon" jdbcType="VARCHAR" />
+                <result column="M_Des" property="mDes" jdbcType="VARCHAR" />
+                <result column="CreatePerson" property="createPerson" jdbcType="VARCHAR" />
+                <result column="CreateTime" property="createTime" jdbcType="TIMESTAMP" />
+                <result column="UpdateTime" property="updateTime" jdbcType="TIMESTAMP" />
+                <result column="SortCode" property="sortCode" jdbcType="VARCHAR" />
+                <result column="Status" property="status" jdbcType="VARCHAR" />
+                <result column="IsDel" property="isDel" jdbcType="INTEGER" />
+            </collection>
+        </collection>
+    </resultMap>
+
+    <resultMap id="BaseMap" type="com.spring.shiro.demo.entity.UserBean">
+        <id column="Id" property="id" jdbcType="VARCHAR" />
+        <result column="User_Id" property="userId" jdbcType="VARCHAR" />
+        <result column="User_Name" property="userName" jdbcType="VARCHAR" />
+        <result column="User_Account" property="userAccount" jdbcType="VARCHAR" />
+        <result column="User_Password" property="userPassword" jdbcType="VARCHAR" />
+        <result column="User_Job" property="userJob" jdbcType="VARCHAR" />
+        <result column="User_Tel" property="userTel" jdbcType="VARCHAR" />
+        <result column="Org_Id" property="orgId" jdbcType="VARCHAR" />
+        <result column="CreateTime" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UpdateTime" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="Status" property="status" jdbcType="VARCHAR" />
+        <result column="IsDel" property="isDel" jdbcType="INTEGER" />
+    </resultMap>
+    <select id="findByName" parameterType="java.lang.String"  resultMap="BaseMap">
+      SELECT * FROM ZZ_User where User_Account = #{userAccount,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findById" parameterType="java.lang.String" resultMap="userMap">
+        SELECT
+            ZZ_User.Id,
+            ZZ_User.User_Id,
+            ZZ_User.User_Account,
+            ZZ_User.User_Name,
+            ZZ_User.User_Password,
+            ZZ_Role.Role_Id,
+            ZZ_Role.Role_Name,
+            ZZ_Role.Role_Value,
+            ZZ_Module.M_Id,
+            ZZ_Module.M_Name,
+            ZZ_Module.M_Url,
+            ZZ_Module.M_Value
+        FROM
+            ZZ_User,
+            ZZ_RoleUser,
+            ZZ_Role,
+            ZZ_RoleModule,
+            ZZ_Module
+        WHERE
+            ZZ_User.User_Id = #{userId}
+        AND ZZ_User.User_Id = ZZ_RoleUser.User_Id
+        AND ZZ_RoleUser.Role_Id = ZZ_Role.Role_Id
+        AND ZZ_Role.Role_Id = ZZ_RoleModule.Role_Id
+        AND ZZ_RoleModule.Module_Id = ZZ_Module.M_Id
+    </select>
+</mapper>
